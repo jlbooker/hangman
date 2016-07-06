@@ -1,27 +1,41 @@
 <head>
 </head>
 <div id="navlist">
-
 	<h1>Hangman!</h1>
-	<hr>
-	<!-- BEGIN pic -->{PICTURE}<!-- END pic -->
+
   <hr>
-	<p>Letter Bank</p>
+	<!-- BEGIN pic -->
+  {PICTURE}
+  <!-- END pic -->
+  <hr>
+
 	<ul>
-	<!-- BEGIN letters -->
-		<li>{LETTERS}</li>
-	<!-- END letters -->
+	<!-- BEGIN panel -->
+		<li>{LETTER_PANEL}</li>
+	<!-- END panel -->
 	</ul>
 
-	<ul>
-	<!-- BEGIN correct -->
-		<li>{CORRECTLETTERS}</li>
-	<!-- END correct -->
+  <br>
+  <!-- BEGIN form -->
+  {GUESS_FORM}
+  <!-- END form -->
+  <br>
+
+  <ul>
+	<!-- BEGIN bank -->
+		<li>{LETTER_BANK}</li>
+	<!-- END bank -->
 	</ul>
 </div>
 
 <div id="main">
-	<!-- BEGIN wlgame -->{WIN_LOSS}<!-- END wlgame -->
-	<br>
-	<!-- BEGIN ngame -->{NEW_GAME}<!-- END ngame -->
+  <!-- BEGIN wlgame -->
+  {WIN_LOSE}
+  <!-- END wlgame -->
+
+  <br>
+
+  <!-- BEGIN ngame -->
+  {NEW_GAME}
+  <!-- END ngame -->
 </div>
