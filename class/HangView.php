@@ -18,16 +18,11 @@ class HangView
       //$tpl refers to lowercase comment tag names in hangview.tpl
       $tpl['pic'] = $this->getImage();
       $tpl['ngame'] = $this->getNewGame();
+      $tpl['bank'] = $this->getLetterBank();
+      $tpl['panel'] = $this->getLetterPanel();
+      $tpl['form'] = $this->getGuessForm();
+      $tpl['wlgame'] = $this->getWinLose();
 
-
-
-      if($_GET['action'] != 'game_start')
-      {
-        $tpl['bank'] = $this->getLetterBank();
-        $tpl['panel'] = $this->getLetterPanel();
-        $tpl['form'] = $this->getGuessForm();
-        $tpl['wlgame'] = $this->getWinLose();
-      }
 
       return PHPWS_Template::process($tpl, self::MODULE, self::FILE);
     }
@@ -38,7 +33,6 @@ class HangView
     public function getImage()
     {
       $pic = 'mod/hangman/img/hang' . $this->hangman->getHangCount() . '.gif';
-      var_dump($pic);
       $picture[] = array('PICTURE' => "<img src=" . $pic . " />");
       return $picture;
     }
@@ -55,15 +49,13 @@ class HangView
       {
         if($reveal)
         {
-          $panel = $panel . ' $letter ';
+          $panel = $panel . ' ' . $letter . ' ';
         }
         else
         {
           $panel = $panel . ' _ ';
         }
       }
-
-      var_dump($panel);
 
       $letterPanel[] = array('LETTER_PANEL' => "<p>" . $panel . "</p>");
       return $letterPanel;
@@ -89,7 +81,7 @@ class HangView
       //$available needs the name of the desired template holder and content to place
       foreach($this->hangman->getBank() as $letter)
       {
-        $bank = PHPWS_Text::moduleLink($letter,'hangman',array('action'=>'guess','letter'=>$letter));
+        $bank = PHPWS_Text::moduleLink($letter,'hangman',array('action'=>'guessL','letter'=>$letter));
         $letterBank[] = array('LETTER_BANK' => $bank);
       }
 
@@ -102,7 +94,6 @@ class HangView
     public function getWinLose()
     {
       $win = "";
-      //var_dump($this->hangman);
       if($this->hangman->isGameOver())
       {
         if($this->hangman->isWinner())

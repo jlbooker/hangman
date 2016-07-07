@@ -9,26 +9,50 @@
     private $bank;
     #The current hangman count. 6 = game over!
     private $hangCount;
-    #The current action.
-    private $action;
 
     public function __construct()
     {
       if(!isset($_GET['action']))
       {
-          $_GET['action'] = 'game_start';
-          $this->hangCount = 6;
+          $_GET['action'] = 'new_game';
       }
 
       if($_GET['action'] == 'new_game')
       {
+          $this->resetGame();
           $this->fetchWord();
           $this->hangCount = 0;
           $bankLetters = 'abcdefghijklmnopqrstuvwxyz';
           $this->bank = str_split($bankLetters);
-          var_dump($this->bank);
+      }
+      else
+      {
+        $this->loadSession();
+
+        switch($_GET['action'])
+        {
+          case 'guessL':
+          {
+              $letter = $_GET['letter'];
+              var_dump($letter);
+              $this->checkLetter($letter);
+              break;
+
+          }
+          case 'guessW':
+          {
+              break;
+          }
       }
     }
+    $this->saveSession();
+
+    //MAIN DEBUG
+    var_dump($_GET['action']);
+    var_dump($this->word);
+    var_dump($this->hangCount);
+    //var_dump($this->bank);
+  }
 
     /*
     Fetches a random word from hangwords.txt. Stores the
@@ -40,7 +64,6 @@
       $words = preg_split('/[\s]+/',$myfile);
       $randWord = strtolower($words[rand(0,count($words))]);
       $letters = str_split($randWord);
-      var_dump($letters);
       for($x = 0; $x < count($letters); $x++)
       {
         $this->word[$letters[$x]] = false;
@@ -50,19 +73,18 @@
     /*
     Sets global variables to match super global variables.
     */
-    public function updateSession()
+    public function saveSession()
     {
       $_SESSION['word'] = $this->word;
       $_SESSION['hangCount'] = $this->hangCount;
       $_SESSION['bank'] = $this->bank;
     }
 
-    /*
-    Uses $_GET to determine the current action
-    */
-    public function updateAction()
+    public function loadSession()
     {
-
+      $this->word=$_SESSION['word'];
+      $this->bank=$_SESSION['bank'];
+      $this->hangCount=$_SESSION['hangCount'];
     }
 
     /*
@@ -89,10 +111,10 @@
     */
     public function bankRemoveLetter($letter)
     {
-      if(array_search($letter))
-      {
-        unset($this->bank[$letter]);
-      }
+      $index = array_search($letter, $this->bank);
+      unset($this->bank[$index]);
+      var_dump($index);
+      return !($index === FALSE);
     }
 
     /*
@@ -102,7 +124,15 @@
     {
       if (array_key_exists($letter, $this->word))
       {
-        revealLetter($letter);
+        $this->revealLetter($letter);
+        $this->bankRemoveLetter($letter);
+      }
+      else
+      {
+        if($this->bankRemoveLetter($letter))
+        {
+          $this->incrementHangCount();
+        }
       }
     }
 
@@ -133,8 +163,7 @@
     */
     public function isGameOver()
     {
-      //works
-      return $this->hangCount == 6;
+      return false;
     }
 
     /*
@@ -142,15 +171,7 @@
     */
     public function isWinner()
     {
-      foreach($this->word as $letter => $reveal)
-      {
-        if(!$reveal)
-        {
-          return false;
-        }
-      }
-
-      return true;
+      return false;
     }
 
     public function getHangCount()
