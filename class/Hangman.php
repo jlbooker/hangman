@@ -11,12 +11,25 @@
     #of letters that appear multiple times.
     private $correct;
     #The current hangman count. 6 = game over!
-    private $count;
+    private $hangCount;
     #The current action.
     private $action;
 
     public function __construct()
     {
+      if(!isset($_GET['action']))
+      {
+          $_GET['action'] = 'game_start';
+          $this->hangCount = 6;
+      }
+
+      if($_GET['action'] == 'new_game')
+      {
+          $this->fetchWord();
+          $this->hangCount = 0;
+      }
+
+
 
     }
 
@@ -26,7 +39,12 @@
     */
     public function fetchWord()
     {
-
+      $myfile = file_get_contents(PHPWS_SOURCE_DIR . 'mod/hangman/hangwords.txt');
+      $words = preg_split('/[\s]+/',$myfile);
+      $randWord = $words[rand(0,count($words))];
+      $_SESSION['word'] = (strtolower($randWord));
+      $this->word = str_split($_SESSION['word']);
+      var_dump($this->word);
     }
 
     /*
@@ -59,7 +77,7 @@
     */
     public function incrementHangCount()
     {
-
+      $this->hangCount++;
     }
 
     /*
@@ -100,8 +118,8 @@
     */
     public function isGameOver()
     {
-      //default
-      return true;
+      //works
+      return $this->hangCount == 6;
     }
 
     /*
@@ -110,7 +128,12 @@
     public function isWinner()
     {
       //default
-      return true;
+      return false;
+    }
+
+    public function getHangCount()
+    {
+      return $this->hangCount;
     }
   }
 ?>

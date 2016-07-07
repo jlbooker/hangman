@@ -17,11 +17,17 @@ class HangView
     {
       //$tpl refers to lowercase comment tag names in hangview.tpl
       $tpl['pic'] = $this->getImage();
-      $tpl['bank'] = $this->getLetterBank();
-      $tpl['panel'] = $this->getLetterPanel();
-      $tpl['form'] = $this->getGuessForm();
-      $tpl['wlgame'] = $this->getWinLose();
       $tpl['ngame'] = $this->getNewGame();
+
+
+
+      if($_GET['action'] != 'game_start')
+      {
+        $tpl['bank'] = $this->getLetterBank();
+        $tpl['panel'] = $this->getLetterPanel();
+        $tpl['form'] = $this->getGuessForm();
+        $tpl['wlgame'] = $this->getWinLose();
+      }
 
       return PHPWS_Template::process($tpl, self::MODULE, self::FILE);
     }
@@ -31,9 +37,8 @@ class HangView
     */
     public function getImage()
     {
-      //default
-
-      $pic = 'mod/hangman/img/hang6.gif';
+      $pic = 'mod/hangman/img/hang' . $this->hangman->getHangCount() . '.gif';
+      var_dump($pic);
       $picture[] = array('PICTURE' => "<img src=" . $pic . " />");
       return $picture;
     }
@@ -100,7 +105,7 @@ class HangView
     */
     public function getNewGame()
     {
-      $new = "Test New Game";
+      $new = PHPWS_Text::moduleLink('New Game','hangman',array('action'=>'new_game'));
       $newGame[] = array('NEW_GAME' => "<p>" . $new . "</p>");
       return $newGame;
     }
