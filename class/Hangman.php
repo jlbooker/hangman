@@ -100,7 +100,17 @@
     */
     public function isGameOver()
     {
+      //default
+      return true;
+    }
 
+    /*
+    Determines if the user won or lost.
+    */
+    public function isWinner()
+    {
+      //default
+      return true;
     }
   }
 ?>

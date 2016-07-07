@@ -5,7 +5,7 @@ class HangView
     const MODULE = 'hangman';
     const FILE = 'hangview.tpl';
 
-    public function __contruct(Hangman $hangman)
+    public function __construct(Hangman $hangman)
     {
       $this->hangman = $hangman;
     }
@@ -77,7 +77,20 @@ class HangView
     */
     public function getWinLose()
     {
-      $win = "Test Win Lose";
+      $win = "";
+      //var_dump($this->hangman);
+      if($this->hangman->isGameOver())
+      {
+        if($this->hangman->isWinner())
+        {
+          $win = "You won!!";
+        }
+        else
+        {
+          $win = "Oops, you lost...";
+        }
+      }
+
       $winLose[] = array('WIN_LOSE' => "<p>" . $win . "</p>");
       return $winLose;
     }
