@@ -7,9 +7,6 @@
     private $word;
     #Bank of letters to guess as character array.
     private $bank;
-    #Correctly guessed letters, includes each instance
-    #of letters that appear multiple times.
-    private $correct;
     #The current hangman count. 6 = game over!
     private $hangCount;
     #The current action.
@@ -27,10 +24,10 @@
       {
           $this->fetchWord();
           $this->hangCount = 0;
+          $bankLetters = 'abcdefghijklmnopqrstuvwxyz';
+          $this->bank = str_split($bankLetters);
+          var_dump($this->bank);
       }
-
-
-
     }
 
     /*
@@ -41,10 +38,13 @@
     {
       $myfile = file_get_contents(PHPWS_SOURCE_DIR . 'mod/hangman/hangwords.txt');
       $words = preg_split('/[\s]+/',$myfile);
-      $randWord = $words[rand(0,count($words))];
-      $_SESSION['word'] = (strtolower($randWord));
-      $this->word = str_split($_SESSION['word']);
-      var_dump($this->word);
+      $randWord = strtolower($words[rand(0,count($words))]);
+      $letters = str_split($randWord);
+      var_dump($letters);
+      for($x = 0; $x < count($letters); $x++)
+      {
+        $this->word[$letters[$x]] = false;
+      }
     }
 
     /*
@@ -52,7 +52,9 @@
     */
     public function updateSession()
     {
-
+      $_SESSION['word'] = $this->word;
+      $_SESSION['hangCount'] = $this->hangCount;
+      $_SESSION['bank'] = $this->bank;
     }
 
     /*
@@ -69,7 +71,9 @@
     */
     public function resetGame()
     {
-
+      unset($_SESSION['word']);
+      unset($_SESSION['hangCount']);
+      unset($_SESSION['bank']);
     }
 
     /*
@@ -85,7 +89,10 @@
     */
     public function bankRemoveLetter($letter)
     {
-
+      if(array_search($letter))
+      {
+        unset($this->bank[$letter]);
+      }
     }
 
     /*
@@ -93,7 +100,10 @@
     */
     public function checkLetter($letter)
     {
-
+      if (array_key_exists($letter, $this->word))
+      {
+        revealLetter($letter);
+      }
     }
 
     /*
@@ -102,7 +112,7 @@
     */
     public function revealLetter($letter)
     {
-
+      $this->word[$letter] = true;
     }
 
     /*
@@ -110,7 +120,12 @@
     */
     public function revealWord()
     {
+      foreach($this->word as $letter => $reveal)
+      {
+        $reveal = true;
+      }
 
+      $this->hangCount = 6;
     }
 
     /*
@@ -127,13 +142,30 @@
     */
     public function isWinner()
     {
-      //default
-      return false;
+      foreach($this->word as $letter => $reveal)
+      {
+        if(!$reveal)
+        {
+          return false;
+        }
+      }
+
+      return true;
     }
 
     public function getHangCount()
     {
       return $this->hangCount;
+    }
+
+    public function getWord()
+    {
+      return $this->word;
+    }
+
+    public function getBank()
+    {
+      return $this->bank;
     }
   }
 ?>

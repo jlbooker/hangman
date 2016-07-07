@@ -49,8 +49,23 @@ class HangView
     */
     public function getLetterPanel()
     {
-      $letter = "Test Letter Panel";
-      $letterPanel[] = array('LETTER_PANEL' => "<p>" . $letter . "</p>");
+      $panel = '';
+      $word = $this->hangman->getWord();
+      foreach($word as $letter => $reveal)
+      {
+        if($reveal)
+        {
+          $panel = $panel . ' $letter ';
+        }
+        else
+        {
+          $panel = $panel . ' _ ';
+        }
+      }
+
+      var_dump($panel);
+
+      $letterPanel[] = array('LETTER_PANEL' => "<p>" . $panel . "</p>");
       return $letterPanel;
     }
 
@@ -72,8 +87,12 @@ class HangView
       //default
       //Module link takes text to display, module name, and an array of URL attributes to access with $_GET
       //$available needs the name of the desired template holder and content to place
-      $bank = PHPWS_Text::moduleLink('a','hangman',array('action'=>'guess','letter'=>'a'));
-      $letterBank[] = array('LETTER_BANK' => $bank);
+      foreach($this->hangman->getBank() as $letter)
+      {
+        $bank = PHPWS_Text::moduleLink($letter,'hangman',array('action'=>'guess','letter'=>$letter));
+        $letterBank[] = array('LETTER_BANK' => $bank);
+      }
+
       return $letterBank;
     }
 

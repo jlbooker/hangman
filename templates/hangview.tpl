@@ -4,17 +4,16 @@
 	<h1>Hangman!</h1>
 
   <hr>
-	<!-- BEGIN pic -->
+  <!-- BEGIN pic -->
   {PICTURE}
   <!-- END pic -->
   <hr>
 
-	<ul>
-	<!-- BEGIN panel -->
-		<li>{LETTER_PANEL}</li>
-	<!-- END panel -->
-	</ul>
-
+	
+  <!-- BEGIN panel -->
+  {LETTER_PANEL}
+  <!-- END panel -->
+	
   <br>
   <!-- BEGIN form -->
   {GUESS_FORM}
@@ -23,7 +22,7 @@
 
   <ul>
 	<!-- BEGIN bank -->
-		<li>{LETTER_BANK}</li>
+    <li>{LETTER_BANK}</li>
 	<!-- END bank -->
 	</ul>
 </div>
