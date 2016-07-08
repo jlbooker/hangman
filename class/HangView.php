@@ -1,10 +1,14 @@
 <?php
 class HangView
 {
+    #Hangman object used to calculate game state.
     private $hangman;
     const MODULE = 'hangman';
     const FILE = 'hangview.tpl';
 
+    /*
+    Constructor initializes Hangman object.
+    */
     public function __construct(Hangman $hangman)
     {
       $this->hangman = $hangman;
@@ -18,11 +22,14 @@ class HangView
       //$tpl refers to lowercase comment tag names in hangview.tpl
       $tpl['pic'] = $this->getImage();
       $tpl['ngame'] = $this->getNewGame();
-      $tpl['bank'] = $this->getLetterBank();
+      if($this->hangman->isGameOver())
+      {
+        $tpl['wlgame'] = $this->getWinLose();
+      }
+      else {
+        $tpl['bank'] = $this->getLetterBank();
+      }
       $tpl['panel'] = $this->getLetterPanel();
-      $tpl['form'] = $this->getGuessForm();
-      $tpl['wlgame'] = $this->getWinLose();
-
 
       return PHPWS_Template::process($tpl, self::MODULE, self::FILE);
     }
@@ -62,21 +69,10 @@ class HangView
     }
 
     /*
-    Determines how to display the guess form.
-    */
-    public function getGuessForm()
-    {
-      $guess = "Test Guess Form";
-      $guessForm[] = array('GUESS_FORM' => "<p>" . $guess . "</p>");
-      return $guessForm;
-    }
-
-    /*
     Determines how to display the letter bank.
     */
     public function getLetterBank()
     {
-      //default
       //Module link takes text to display, module name, and an array of URL attributes to access with $_GET
       //$available needs the name of the desired template holder and content to place
       foreach($this->hangman->getBank() as $letter)
@@ -103,6 +99,7 @@ class HangView
         else
         {
           $win = "Oops, you lost...";
+          $this->hangman->revealWord();
         }
       }
 
