@@ -10,7 +10,10 @@
   echo PHPWS_Template::process($template, 'hangman','game.tpl');
 
   //fxn to run game
-  function run_game($words, $letter){
+  function run_game($word){
     $choice = $_GET["letter"];
+
+    $choice = $choice[0];
   }
+
 ?>
