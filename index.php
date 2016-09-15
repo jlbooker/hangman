@@ -13,7 +13,6 @@
   $template['FORM_CONTENT'] = 'Pick a letter: ';
   $template['GREETING'] = 'Welcome to Hangman';
   $template['IMG_SRC'] = $images[$attempts];
-  $template['RESPONSE'] = "Your letter was not part of the word.";
 
   echo PHPWS_Template::process($template, 'hangman','game.tpl');
 
@@ -33,7 +32,8 @@
     $blank_spaces = blanks($words);
 
     if(strlen($letter_choice) > 1){
-      echo "Please, only choose 1 letter.";
+      $template['REPONSE'] = "Please, only choose 1 letter.";
+
       echo PHPWS_Template::process($template, 'hangman','game.tpl');
     }
     else{
@@ -45,18 +45,17 @@
         $pos = strpos($word, $letter_choice);
 
         if($pos === false){
-          echo "Your letter was not part of the word.";
           $attempts = $attempts + 1;
 
           $template['FORM CONTENT'] = 'Pick another letter: ';
           $template['GREETING'] = 'Continue your game. You have ' . (6 - $attempts) . ' attempts left.';
           $template['IMG_SRC'] = $images[$attempts];
           $template['BLANKS_WORD'] = $blank_spaces;
+          $template['RESPONSE'] = "Your letter was not part of the word.";
 
           echo PHPWS_Template::process($template, 'hangman','game.tpl');
         }
         else{
-          echo "Your letter was found in the word!";
 
           for($i = 0; $i <= strlen($word); $i++){
             if($word[i] == $letter_choice){
@@ -68,6 +67,7 @@
           $template['GREETING'] = 'Continue your game. You have ' . (6 - $attempts) . ' attempts left.';
           $template['IMG_SRC'] = $images[$attempts];
           $template['BLANKS_WORD'] = $blank_spaces;
+          $template['RESPONSE'] = "Your letter was found in the word!";
 
           echo PHPWS_Template::process($template, 'hangman','game.tpl');
         }
