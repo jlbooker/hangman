@@ -13,6 +13,7 @@
   $template['FORM_CONTENT'] = 'Pick a letter: ';
   $template['GREETING'] = 'Welcome to Hangman';
   $template['IMG_SRC'] = $images[$attempts];
+  $template['RESPONSE'] = "Your letter was not part of the word.";
 
   echo PHPWS_Template::process($template, 'hangman','game.tpl');
 
