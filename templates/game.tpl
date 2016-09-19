@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>the one where you hang people</title>
+  <title>MLGs ONLY</title>
   <body>
   <style>
   .title {text-align: center; font-size: 60px;}

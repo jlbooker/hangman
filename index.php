@@ -3,16 +3,14 @@
   $word = $word_list[array_rand($word_list, 1)];
   $word = strtolower($word);
   $word = preg_replace('/[^a-z]/', '', $word);
-  $images = [file(PHPWS_SOURCE_DIR . 'mod/hangman/img/hang0.gif'), file(PHPWS_SOURCE_DIR . 'mod/hangman/img/hang1.gif'),
-    file(PHPWS_SOURCE_DIR . 'mod/hangman/img/hang2.gif'), file(PHPWS_SOURCE_DIR . 'mod/hangman/img/hang3.gif'),
-    file(PHPWS_SOURCE_DIR . 'mod/hangman/img/hang4.gif'), file(PHPWS_SOURCE_DIR . 'mod/hangman/img/hang5.gif'),
-    file(PHPWS_SOURCE_DIR . 'mod/hangman/img/hang6.gif')];
   $attempts = 0;
   $place_holder = "_ ";
 
   $template['FORM_CONTENT'] = 'Pick a letter: ';
   $template['GREETING'] = 'Welcome to Hangman';
-  $template['IMG_SRC'] = $images[$attempts];
+  $template['IMG_SRC'] = "http://localhost/phpwebsite/mod/hangman/img/hang$attempts.gif";
+
+  //$template['IMG_SRC'] = 'http://localhost/phpwebsite/mod/hangman/img/hang' . $attempts . 'gif';
 
   echo PHPWS_Template::process($template, 'hangman','game.tpl');
 
@@ -27,12 +25,14 @@
 
   //fxn to run game
   function run_game($word){
+    if(isset($_POST['submit'])){
+
     $letter_choice = $_POST['letter'];
     global $word, $attempts;
     $blank_spaces = blanks($words);
 
     if(strlen($letter_choice) > 1){
-      $template['REPONSE'] = "Please, only choose 1 letter.";
+      $template['REPONSE'] = 'Please, only choose 1 letter.';
 
       echo PHPWS_Template::process($template, 'hangman','game.tpl');
     }
@@ -48,10 +48,10 @@
           $attempts = $attempts + 1;
 
           $template['FORM CONTENT'] = 'Pick another letter: ';
-          $template['GREETING'] = 'Continue your game. You have ' . (6 - $attempts) . ' attempts left.';
+          $template['RESPONSE'] = 'Continue your game. You have ' . (6 - $attempts) . ' attempts left.';
           $template['IMG_SRC'] = $images[$attempts];
           $template['BLANKS_WORD'] = $blank_spaces;
-          $template['RESPONSE'] = "Your letter was not part of the word.";
+          $template['GREETING'] = 'Your letter was not part of the word.';
 
           echo PHPWS_Template::process($template, 'hangman','game.tpl');
         }
@@ -67,14 +67,15 @@
           $template['GREETING'] = 'Continue your game. You have ' . (6 - $attempts) . ' attempts left.';
           $template['IMG_SRC'] = $images[$attempts];
           $template['BLANKS_WORD'] = $blank_spaces;
-          $template['RESPONSE'] = "Your letter was found in the word!";
+          $template['RESPONSE'] = 'Your letter was found in the word!';
 
           echo PHPWS_Template::process($template, 'hangman','game.tpl');
         }
       }
     }
   }
+}
 
-  run_game($word);
+run_game($word);
 
 ?>
