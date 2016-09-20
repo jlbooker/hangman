@@ -7,14 +7,6 @@
   $_SESSION['attempt'] = 0;
   define('PLACEHOLDER', "_ ");
 
-  //fxn to display alphabet links
-  function alphabet_list(){
-    for ($i = 65; $i <= 90; $i++) {
-      $letterLinks[] = '<a href="/phpwebsite/index.php?module=hangman&letter='.chr($i).'" class="myclass">'.chr($i).'</a>';
-      }
-    return implode(" ",$letterLinks);
-  }
-
   $template['FORM_CONTENT'] = 'Pick a letter: ';
   $template['GREETING'] = 'Welcome to Hangman';
   $template['IMG_SRC'] =
@@ -25,15 +17,6 @@
   //$template['IMG_SRC'] = 'http://localhost/phpwebsite/mod/hangman/img/hang' . $attempts . 'gif';
 
   echo PHPWS_Template::process($template, 'hangman','game.tpl');
-
-  //fxn for display of placeholder
-  function blanks($word){
-    $place_holder = "";
-    for($i = 0; $i <= strlen($word); $i++){
-      $place_holder .= PLACEHOLDER;
-    }
-    return $place_holder;
-  }
 
   //fxn to run game
   function run_game($word){
