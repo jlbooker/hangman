@@ -14,8 +14,9 @@
     <center><img src={IMG_SRC} /></center>
     <p>{BLANKS_WORD}</p>
 
-    <h3>Choose a letter from the list below...</h3>
-    <center><ul>{ALPHABET}</ul></center>
+    <h3>Choose a letter from the list below...<br></br></h3>
+    <ul>{ALPHABET}
+    </ul>
 
   </body>
 </head>
