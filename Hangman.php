@@ -5,9 +5,14 @@
     // private $_SESSION['attempts'];
 
     //constructor
-    function __construct($word, $attempts){
+    function __construct(){
+      $word_list = file(PHPWS_SOURCE_DIR . 'mod/hangman/hangwords.txt');
+      $word = $word_list[array_rand($word_list, 1)];
+      $word = strtolower($word);
+      $word = preg_replace('/[^a-z]/', '', $word);
+
       $_SESSION['word'] = $word;
-      $_SESSION['attempts'] = $attempts;
+      $_SESSION['attempts'] = 0;
       define("PLACEHOLDER", "_ ");
 
       $template['FORM_CONTENT'] = 'Pick a letter: ';
@@ -22,17 +27,17 @@
 
     function run_game(){
 
-        while($attempts > 0 && $attempts < 7){
-          $pos = strpos($word, $_SESSION['letterlinks']);
+        while($_SESSION['attempts'] > 0 && $_SESSION['attempts'] < 7){
+          $pos = strpos($word, $_SESSION['letter']);
 
           if($pos === false){
-            $attempts = $attempts + 1;
+              $_SESSION['attempts'] = $_SESSION['attempts'] + 1;
 
             $template['FORM CONTENT'] = 'Pick another letter: ';
             $template['RESPONSE'] = 'Continue your game.
-              You have ' . (6 - $attempts) . ' attempts left.';
+              You have ' . (6 - $_SESSION['attempts']) . ' attempts left.';
             $template['IMG_SRC'] =
-              "http://localhost/phpwebsite/mod/hangman/img/hang$attempts.gif";
+              "http://localhost/phpwebsite/mod/hangman/img/hang{$_SESSION['attempts']}.gif";
             $template['BLANKS_WORD'] = $blank_spaces;
             $template['GREETING'] = 'Your letter was not part of the word.';
 
@@ -40,16 +45,16 @@
           }else{
 
             for($i = 0; $i <= strlen($word); $i++){
-              if($word[$i] == $_SESSION['letterlinks']){
-                $blank_spaces[$i] = $_SESSION['letterlinks'];
+              if($word[$i] == $_SESSION['letter']){
+                $blank_spaces[$i] = $_SESSION['letter'];
               }
             }
 
             $template['FORM CONTENT'] = 'Pick another letter: ';
             $template['GREETING'] = 'Continue your game.
-              You have ' . (6 - $attempts) . ' attempts left.';
+              You have ' . (6 - $_SESSION['attempts']) . ' attempts left.';
             $template['IMG_SRC'] =
-              "http://localhost/phpwebsite/mod/hangman/img/hang$attempts.gif";
+              "http://localhost/phpwebsite/mod/hangman/img/hang{$_SESSION['attempts']}.gif";
             $template['BLANKS_WORD'] = $blank_spaces;
             $template['RESPONSE'] = 'Your letter was found in the word!';
 
@@ -57,17 +62,17 @@
           }
         }
 
-        if($pos = strpos($blank_spaces, '_ ')){
-          $template['FORM CONTENT'] = 'You lost the game!';
-          $template['GREETING'] = 'Better luck next time.';
-          $template['IMG_SRC'] =
-            "http://localhost/phpwebsite/mod/hangman/img/hang6.gif";
-          $template['BLANKS_WORD'] = word_ses;
-          $template['RESPONSE'] = 'Click here to start a new game:
-            <a href="/phpwebsite/index.php?module=hangman">New Game</a>';
-
-          echo PHPWS_Template::process($template, 'hangman','game.tpl');
-        }
+        // if($pos = strpos(PLACEHOLDER, '_ ')){
+        //   $template['FORM CONTENT'] = 'You lost the game!';
+        //   $template['GREETING'] = 'Better luck next time.';
+        //   $template['IMG_SRC'] =
+        //     "http://localhost/phpwebsite/mod/hangman/img/hang6.gif";
+        //   $template['BLANKS_WORD'] = word_ses;
+        //   $template['RESPONSE'] = 'Click here to start a new game:
+        //     <a href="/phpwebsite/index.php?module=hangman">New Game</a>';
+        //
+        //   echo PHPWS_Template::process($template, 'hangman','game.tpl');
+        // }
       }
 
 
@@ -76,7 +81,7 @@
       for ($i = 65; $i <= 90; $i++) {
         $letterLinks[] = '<a href="/phpwebsite/index.php?module=hangman&letter='.chr($i).'" class="myclass">'.chr($i).'</a>';
       }
-      $_SESSION['letterLinks'] = $letterLinks;
+      $_SESSION['letter'] = $letterLinks;
       return implode(" ",$letterLinks);
     }
 
