@@ -16,8 +16,47 @@ spl_autoload_register(function ($class_name) {
   //echo PHPWS_Template::process($template, 'hangman','game.tpl');
 
   // echo PHPWS_Template::process($template, 'hangman','game.tpl');
-  $_SESSION['game'] = new Hangman();
-  $_SESSION['game']->run_game();
+  var_dump($_SESSION['word']);
+  var_dump($_SESSION['wrongAttempts']);
+  var_dump($_SESSION['usedLetters']);
 
+  $game = makeGame();
+  if(isset($_REQUEST['letter'])){
+      $game->run_game();
+  }
+  saveGame($game);
+  $game->render();
 
-?>
+  function makeGame(){
+      if(isset($_SESSION['word'])){
+          $word = $_SESSION['word'];
+          $wrongAttempts = $_SESSION['wrongAttempts'];
+          $usedLetters = $_SESSION['usedLetters'];
+      }
+      else{
+          $word = chooseWord();
+          $_SESSION['word'] = $word;
+          $_SESSION['wrongAttempts'] = 0;
+          $wrongAttempts = 0;
+          $_SESSION['usedLetters'] = array();
+          $usedLetters = array();
+      }
+      return new Hangman($word, $wrongAttempts, $usedLetters);
+
+  }
+
+  function saveGame(Hangman $obj){
+      $_SESSION['word'] = $obj->getWord();
+      $_SESSION['wrongAttempts'] = $obj->getWrongAttempts();
+      $_SESSION['usedLetters'] = $obj->getUsedLetters();
+
+  }
+
+  function chooseWord(){
+      $word_list = file(PHPWS_SOURCE_DIR . 'mod/hangman/hangwords.txt');
+      $word = $word_list[array_rand($word_list, 1)];
+      $word = strtolower($word);
+      $word = preg_replace('/[^a-z]/', '', $word);
+
+      return $word;
+  }
