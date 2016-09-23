@@ -2,11 +2,11 @@
 class Hangman{
     private $word;
     private $wrongAttempts;
-    private $usedLetters;
+    private $usedLetters = [];
     const PLACEHOLDER = "_ ";
 
     //constructor
-    function __construct($word, $wrongAttempts, Array $usedLetters){
+    function __construct($word, $wrongAttempts, $usedLetters){
 
         $this->word = $word;
         $this->wrongAttempts = $wrongAttempts;
@@ -14,7 +14,7 @@ class Hangman{
     }
 
     function run_game(){
-
+        $this->usedLetters = $_REQUEST['letter'];
 
     }
 
@@ -30,7 +30,7 @@ class Hangman{
     //fxn for display of placeholder
     function blanks(){
         $place_holder = "";
-        for($i = 0; $i <= strlen($_SESSION['word']); $i++){
+        for($i = 0; $i <= strlen($this->word); $i++){
             $place_holder .= self::PLACEHOLDER;
         }
         return $place_holder;

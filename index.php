@@ -4,6 +4,7 @@ spl_autoload_register(function ($class_name) {
     include $class_name . '.php';
 });
 
+
   // $template['FORM_CONTENT'] = 'Pick a letter: ';
   // $template['GREETING'] = 'Welcome to Hangman';
   // $template['IMG_SRC'] =
