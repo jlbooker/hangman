@@ -17,32 +17,46 @@ spl_autoload_register(function ($class_name) {
   //echo PHPWS_Template::process($template, 'hangman','game.tpl');
 
   // echo PHPWS_Template::process($template, 'hangman','game.tpl');
-  var_dump($_SESSION['word']);
-  var_dump($_SESSION['wrongAttempts']);
-  var_dump($_SESSION['usedLetters']);
 
   $game = makeGame();
   if(isset($_REQUEST['letter'])){
       $game->run_game();
   }
+  else{
+      $game->initital();
+  }
   saveGame($game);
   $game->render();
+  var_dump($_SESSION['word']);
 
   function makeGame(){
-      if(isset($_SESSION['word'])){
+      if(!isset($_REQUEST['letter'])){
+          $word = chooseWord();
+          $_SESSION['word'] = $word;
+          $_SESSION['wrongAttempts'] = 0;
+          $wrongAttempts = $_SESSION['wrongAttempts'];
+          $_SESSION['usedLetters'] = array();
+          $usedLetters = $_SESSION['usedLetters'];
+          $_SESSION['places'] = array();
+          $place_holder = $_SESSION['places'];
+      }
+      else if(isset($_SESSION['word'])){
           $word = $_SESSION['word'];
           $wrongAttempts = $_SESSION['wrongAttempts'];
           $usedLetters = $_SESSION['usedLetters'];
+          $place_holder = $_SESSION['places'];
       }
       else{
           $word = chooseWord();
           $_SESSION['word'] = $word;
           $_SESSION['wrongAttempts'] = 0;
-          $wrongAttempts = 0;
+          $wrongAttempts = $_SESSION['wrongAttempts'];
           $_SESSION['usedLetters'] = array();
-          $usedLetters = array();
+          $usedLetters = $_SESSION['usedLetters'];
+          $_SESSION['places'] = array();
+          $place_holder = $_SESSION['places'];
       }
-      return new Hangman($word, $wrongAttempts, $usedLetters);
+      return new Hangman($word, $wrongAttempts, $usedLetters, $place_holder);
 
   }
 
@@ -50,6 +64,7 @@ spl_autoload_register(function ($class_name) {
       $_SESSION['word'] = $obj->getWord();
       $_SESSION['wrongAttempts'] = $obj->getWrongAttempts();
       $_SESSION['usedLetters'] = $obj->getUsedLetters();
+      $_SESSION['places'] = $obj->getPlaces();
 
   }
 

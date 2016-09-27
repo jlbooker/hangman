@@ -10,11 +10,10 @@
   </style>
 
     <h1 class="title">{GREETING}</h1>
-    <h3 >{RESPONSE}</h3>
     <center><img src={IMG_SRC} /></center>
     <p>{BLANKS_WORD}</p>
 
-    <h3>Choose a letter from the list below...<br></br></h3>
+    <h3>{RESPONSE}<br></br></h3>
     <ul class="alpha">{ALPHABET}
     </ul>
 
