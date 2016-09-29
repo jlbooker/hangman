@@ -56,20 +56,12 @@ class Hangman{
 
     //function to compare letter to word and print respective blanks
     function checkWord(){
-        $hold = strtolower($_REQUEST['letter']);
-        for($i = 0; $i < strlen($this->word); $i++){
-            $pos = strpos($this->word, $hold);
-            if($pos === 0 || $pos){
-                $this->place_holder[$pos] = strtoupper($hold);
-
-            }
-        }
 
         var_dump($this->place_holder);
-        var_dump($hold);
         return implode(" ", $this->place_holder);
     }
 
+    //function to return placeholder
     function getPlaces(){
         return $this->place_holder;
     }
