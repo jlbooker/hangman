@@ -22,7 +22,7 @@ class Hangman{
 
     function initital(){
         $this->greeting = 'Welcome to Hangman';
-        $this->blanksShow = $this->blanks();
+        $this->blanksShow = implode(" ", $this->blanks());
         $this->linksList = $this->alphabetList();
         $this->response = 'Choose a letter from the list below...';
     }
@@ -34,7 +34,7 @@ class Hangman{
         $this->greeting = 'Welcome to Hangman';
         $this->linksList = $this->alphabetList();
         $this->response = 'Choose a letter from the list below...';
-        $this->blanksShow = $this->checkWord();
+        $this->blanksShow = implode(" ", $this->checkWord());
     }
 
     //fxn to display alphabet links
@@ -49,16 +49,29 @@ class Hangman{
     //fxn for display of placeholder
     function blanks(){
         for($i = 0; $i < strlen($this->word); $i++){
-            $place_holder_init[] = self::PLACEHOLDER;
+            $this->place_holder[] = self::PLACEHOLDER;
         }
-        return implode(" ",$place_holder_init);
+        return $this->place_holder;
     }
 
     //function to compare letter to word and print respective blanks
     function checkWord(){
 
-        var_dump($this->place_holder);
-        return implode(" ", $this->place_holder);
+        $len = strlen($this->word);
+        $hold = $_REQUEST['letter'];
+        $pos = stripos($this->word, $hold);
+
+        while($pos < ($len - 1) && $pos !== false){
+            $this->place_holder[$pos] = $hold;
+            $pos = stripos($this->word, $hold, $pos + 1);
+        }
+
+        if($pos == ($len - 1)){
+            $this->place_holder[$pos] = $hold;
+        }
+
+        //var_dump($this->place_holder);
+        return $this->place_holder;
     }
 
     //function to return placeholder

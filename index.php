@@ -38,7 +38,7 @@ spl_autoload_register(function ($class_name) {
           $_SESSION['usedLetters'] = array();
           $usedLetters = $_SESSION['usedLetters'];
           $_SESSION['places'] = [];
-          $place_holder = array_pad($_SESSION['places'], strlen($word), "_ ");
+          $place_holder = $_SESSION['places'];
       }
       else if(isset($_SESSION['word'])){
           $word = $_SESSION['word'];
@@ -54,7 +54,7 @@ spl_autoload_register(function ($class_name) {
           $_SESSION['usedLetters'] = array();
           $usedLetters = $_SESSION['usedLetters'];
           $_SESSION['places'] = [];
-          $place_holder = array_pad($_SESSION['places'], strlen($word), "_ ");
+          $place_holder = $_SESSION['places'];
       }
       return new Hangman($word, $wrongAttempts, $usedLetters, $place_holder);
 
