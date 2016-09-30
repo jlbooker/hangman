@@ -16,6 +16,8 @@
     <h3>{RESPONSE}<br></br></h3>
     <ul class="alpha">{ALPHABET}
     </ul>
+    <h3>{USED_HEADER}</h3>
+    <ul class="alpha">{USED}</ul>
 
   </body>
 </head>

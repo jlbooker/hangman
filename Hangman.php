@@ -2,11 +2,16 @@
 class Hangman{
     private $word;
     private $wrongAttempts;
+
     private $usedLetters = [];
+    private $usedList;
+    private $used_header;
+
     private $greeting;
     private $blanksShow;
     private $linksList;
     private $response;
+
     private $place_holder = [];
     const PLACEHOLDER = "_";
 
@@ -20,6 +25,7 @@ class Hangman{
 
     }
 
+    //initial rendering info
     function initital(){
         $this->greeting = 'Welcome to Hangman';
         $this->blanksShow = implode(" ", $this->blanks());
@@ -27,14 +33,66 @@ class Hangman{
         $this->response = 'Choose a letter from the list below...';
     }
 
+    //to run the game
     function run_game(){
-        $this->usedLetters = $_REQUEST['letter'];
+        if(in_array($_REQUEST['letter'], $this->usedLetters)){
+            $this->greeting = 'You have already chose that letter!';
+            $this->linksList = $this->alphabetList();
+            $this->response = 'Choose another letter from the list below...';
+            $this->blanksShow = implode(" ", $this->checkWord());
+            $this->used_header = 'Here are the letters you have tried so far: ';
+            $this->usedList = implode(" ", $this->usedLetters);
+        }
+        else{
+            $this->usedLetters[] = $_REQUEST['letter'];
+            }
         //$this->wrongAttempts += 1;
 
-        $this->greeting = 'Welcome to Hangman';
-        $this->linksList = $this->alphabetList();
-        $this->response = 'Choose a letter from the list below...';
-        $this->blanksShow = implode(" ", $this->checkWord());
+        if(stripos($this->word, $_REQUEST['letter']) !== false && $this->wrongAttempts < 6
+            && strcasecmp(implode("", $this->checkWord()), $this->word) !== 0){
+            $this->greeting = 'The letter you chose was found in the word!';
+            $this->linksList = $this->alphabetList();
+            $this->response = 'Choose another letter from the list below...';
+            $this->blanksShow = implode(" ", $this->checkWord());
+            $this->used_header = 'Here are the letters you have tried so far: ';
+            $this->usedList = implode(" ", $this->usedLetters);
+        }
+
+        else if($this->wrongAttempts < 6 && strcasecmp(implode("", $this->checkWord()), $this->word) !== 0){
+            $this->greeting = 'The letter you chose was not found. Try again!';
+            $this->linksList = $this->alphabetList();
+            $this->response = 'Choose a letter from the list below...';
+            $this->blanksShow = implode(" ", $this->checkWord());
+            $this->used_header = 'Here are the letters you have tried so far: ';
+            $this->usedList = implode(" ", $this->usedLetters);
+            $this->wrongAttempts += 1;
+        }
+
+        else if(strcasecmp(implode("", $this->checkWord()), $this->word) !== 0 && $this->wrongAttempts === 6){
+            $this->greeting = 'You lost the game!';
+            //$this->linksList = $this->alphabetList();
+            $this->response = "The hidden word was: $this->word";
+            // $this->blanksShow = implode("", $this->checkWord());
+            $this->used_header = 'Here are the letters you tried: ';
+            $this->usedList = implode(" ", $this->usedLetters);
+        }
+
+        else{
+            $this->greeting = 'You won!';
+            //$this->linksList = $this->alphabetList();
+            $this->response = 'The hidden word is shown above.';
+            $this->blanksShow = implode(" ", $this->checkWord());
+            $this->used_header = "Here are the letters you tried: ";
+            $this->usedList = implode(" ", $this->usedLetters);
+        }
+
+        // $this->greeting = 'Welcome to Hangman';
+        // $this->linksList = $this->alphabetList();
+        // $this->response = 'Choose a letter from the list below...';
+        // $this->blanksShow = implode(" ", $this->checkWord());
+        // $this->used_header = 'Here are the letters you have tried so far: ';
+        // $this->usedList = implode(" ", $this->usedLetters);
+        var_dump($_REQUEST['letter']);
     }
 
     //fxn to display alphabet links
@@ -70,7 +128,6 @@ class Hangman{
             $this->place_holder[$pos] = $hold;
         }
 
-        //var_dump($this->place_holder);
         return $this->place_holder;
     }
 
@@ -102,6 +159,8 @@ class Hangman{
         "http://localhost/phpwebsite/mod/hangman/img/hang$this->wrongAttempts.gif";
         $template['BLANKS_WORD'] = $this->blanksShow;
         $template['ALPHABET'] = $this->linksList;
+        $template['USED'] = $this->usedList;
+        $template['USED_HEADER'] = $this->used_header;
 
         echo PHPWS_Template::process($template, 'hangman','game.tpl');
     }
