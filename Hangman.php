@@ -3,21 +3,24 @@ class Hangman{
     private $word;
     private $wrongAttempts;
 
-    private $usedLetters = [];
-    private $usedList;
-    private $used_header;
-
+    //running game temlate variables
     private $greeting;
     private $blanksShow;
     private $linksList;
     private $response;
+    private $usedList;
+    private $used_header;
 
-    //new game variables
+    //new game template variables
     private $link;
     private $pt1;
     private $pt2;
 
+    //arrays
+    private $usedLetters = [];
     private $place_holder = [];
+
+    //constants
     const PLACEHOLDER = "_";
 
     //constructor
@@ -30,7 +33,7 @@ class Hangman{
 
     }
 
-    //initial rendering info
+    //initial rendering info when starting a new game
     function initital(){
         $this->greeting = 'Welcome to Hangman';
         $this->blanksShow = implode(" ", $this->blanks());
@@ -38,17 +41,14 @@ class Hangman{
         $this->response = 'Choose a letter from the list below...';
     }
 
-    //to run the game
+    //actually runs the game
+    //STILL HAS ONE ADDITIONAL ATTEMPT REMAINING EVEN AFTER FULL HANGMAN IMAGE IS PRINTED
+    //AND WRONGATTEMPTS = 6
     function run_game(){
         $hold = $_REQUEST['letter'];
-
-
-        //$this->wrongAttempts += 1;
         if(strcasecmp(implode("", $this->checkWord()), $this->word) !== 0 && $this->wrongAttempts === 6){
             $this->greeting = 'You lost the game!';
-            //$this->linksList = $this->alphabetList();
             $this->response = "The hidden word was: $this->word";
-            // $this->blanksShow = implode("", $this->checkWord());
             $this->used_header = 'Here are the letters you tried: ';
             $this->usedLetters[] = $hold;
             $this->usedList = implode(" ", $this->usedLetters);
@@ -76,9 +76,7 @@ class Hangman{
                 $this->blanksShow = implode(" ", $this->checkWord());
                 $this->used_header = 'Here are the letters you have tried so far: ';
                 $this->usedLetters[] = $hold;
-
                 $this->usedList = implode(" ", $this->usedLetters);
-
             }
         }
 
@@ -98,31 +96,23 @@ class Hangman{
                 $this->blanksShow = implode(" ", $this->checkWord());
                 $this->used_header = 'Here are the letters you have tried so far: ';
                 $this->usedLetters[] = $hold;
-
                 $this->usedList = implode(" ", $this->usedLetters);
-
                 $this->wrongAttempts += 1;
             }
         }
 
         else{
             $this->greeting = 'You won!';
-            //$this->linksList = $this->alphabetList();
             $this->response = 'The hidden word is shown above.';
             $this->blanksShow = implode(" ", $this->checkWord());
             $this->used_header = "Here are the letters you tried: ";
             $this->usedLetters[] = $hold;
-
             $this->usedList = implode(" ", $this->usedLetters);
             //newGame
             $this->pt1 = 'Wanna play again? Click here! >>> ';
             $this->link = "LET'S DO THIS";
             $this->pt2 = ' <<<';
         }
-
-        // var_dump($hold);
-        // var_dump($this->wrongAttempts);
-        // var_dump(in_array($hold, $this->usedLetters));
     }
 
     //fxn to display alphabet links
@@ -134,7 +124,7 @@ class Hangman{
         return implode(" ",$letterLinks);
     }
 
-    //fxn for display of placeholder
+    //fxn for display of INITIAL placeholder
     function blanks(){
         for($i = 0; $i < strlen($this->word); $i++){
             $this->place_holder[] = self::PLACEHOLDER;
@@ -142,7 +132,7 @@ class Hangman{
         return $this->place_holder;
     }
 
-    //function to compare letter to word and print respective blanks
+    //function to compare letter to word and print respective placeholder
     function checkWord(){
 
         $len = strlen($this->word);
@@ -181,7 +171,7 @@ class Hangman{
         return $this->usedLetters;
     }
 
-    //render function
+    //render the game
     function render(){
         $template['GREETING'] = $this->greeting;
         $template['RESPONSE'] = $this->response;

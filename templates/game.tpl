@@ -13,7 +13,6 @@
     <h1 class="title">{GREETING}</h1>
     <center><img src={IMG_SRC} /></center>
     <p>{BLANKS_WORD}</p>
-
     <h3>{RESPONSE}<br></br></h3>
     <ul class="alpha">{ALPHABET}
     </ul>
