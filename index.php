@@ -17,8 +17,15 @@ spl_autoload_register(function ($class_name) {
   //echo PHPWS_Template::process($template, 'hangman','game.tpl');
 
   // echo PHPWS_Template::process($template, 'hangman','game.tpl');
+  if(isset($_GET['LINK'])){
+      unset($_REQUEST['letter']);
+      $game->makeGame();
+      $game->initial();
+  }
+  else {
+      $game = makeGame();
+  }
 
-  $game = makeGame();
   if(isset($_REQUEST['letter'])){
       $game->run_game();
   }
@@ -27,7 +34,6 @@ spl_autoload_register(function ($class_name) {
   }
   saveGame($game);
   $game->render();
-  var_dump($_SESSION['word']);
 
   function makeGame(){
       if(!isset($_REQUEST['letter'])){
