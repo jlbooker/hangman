@@ -42,8 +42,6 @@ class Hangman{
     }
 
     //actually runs the game
-    //STILL HAS ONE ADDITIONAL ATTEMPT REMAINING EVEN AFTER FULL HANGMAN IMAGE IS PRINTED
-    //AND WRONGATTEMPTS = 6
     function run_game(){
         $hold = $_REQUEST['letter'];
         if(strcasecmp(implode("", $this->checkWord()), $this->word) !== 0 && $this->wrongAttempts === 6){
@@ -98,6 +96,18 @@ class Hangman{
                 $this->usedLetters[] = $hold;
                 $this->usedList = implode(" ", $this->usedLetters);
                 $this->wrongAttempts += 1;
+                if(strcasecmp(implode("", $this->checkWord()), $this->word) !== 0 && $this->wrongAttempts === 6){
+                    $this->greeting = 'You lost the game!';
+                    $this->response = "The hidden word was: $this->word";
+                    $this->used_header = 'Here are the letters you tried: ';
+                    $this->usedLetters[] = $hold;
+                    $this->usedList = implode(" ", $this->usedLetters);
+                    //newGame
+                    $this->pt1 = 'Wanna play again? Click here! >>> ';
+                    $this->link = "LET'S DO THIS";
+                    $this->pt2 = ' <<<';
+                    $this->wrongAttempts;
+                }
             }
         }
 
