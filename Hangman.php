@@ -2,6 +2,7 @@
 class Hangman{
     private $word;
     private $wrongAttempts;
+    private $letterLinks = [];
 
     //running game temlate variables
     private $greeting;
@@ -24,12 +25,13 @@ class Hangman{
     const PLACEHOLDER = "_";
 
     //constructor
-    function __construct($word, $wrongAttempts, $usedLetters, $place_holder){
+    function __construct($word, $wrongAttempts, $usedLetters, $place_holder, $letterLinks){
 
         $this->word = $word;
         $this->wrongAttempts = $wrongAttempts;
         $this->usedLetters = $usedLetters;
         $this->place_holder = $place_holder;
+        $this->letterLinks = $letterLinks;
 
     }
 
@@ -37,7 +39,7 @@ class Hangman{
     function initital(){
         $this->greeting = 'Welcome to Hangman';
         $this->blanksShow = implode(" ", $this->blanks());
-        $this->linksList = $this->alphabetList();
+        $this->linksList = implode(" ", $this->alphabetList());
         $this->response = 'Choose a letter from the list below...';
     }
 
@@ -61,41 +63,58 @@ class Hangman{
         && strcasecmp(implode("", $this->checkWord()), $this->word) !== 0){
             if(in_array($hold, $this->usedLetters)){
                 $this->greeting = 'You have already chose that letter!';
-                $this->linksList = $this->alphabetList();
+                $this->linksList = implode(" ", $this->destroyLink());
                 $this->response = 'Choose another letter from the list below...';
                 $this->blanksShow = implode(" ", $this->checkWord());
                 $this->used_header = 'Here are the letters you have tried so far: ';
                 $this->usedList = implode(" ", $this->usedLetters);
+
+                $this->pt1 = 'Wanna start a new game? Click here! >>> ';
+                $this->link = "LET'S DO THIS";
+                $this->pt2 = ' <<<';
             }
             else{
                 $this->greeting = 'The letter you chose was found in the word!';
-                $this->linksList = $this->alphabetList();
+                $this->linksList = implode(" ", $this->destroyLink());
                 $this->response = 'Choose another letter from the list below...';
                 $this->blanksShow = implode(" ", $this->checkWord());
                 $this->used_header = 'Here are the letters you have tried so far: ';
                 $this->usedLetters[] = $hold;
                 $this->usedList = implode(" ", $this->usedLetters);
+
+                $this->pt1 = 'Wanna start a new game? Click here! >>> ';
+                $this->link = "LET'S DO THIS";
+                $this->pt2 = ' <<<';
             }
         }
 
         else if($this->wrongAttempts < 6 && strcasecmp(implode("", $this->checkWord()), $this->word) !== 0){
             if(in_array($hold, $this->usedLetters)){
                 $this->greeting = 'You have already chose that letter!';
-                $this->linksList = $this->alphabetList();
+                $this->linksList = implode(" ", $this->destroyLink());
                 $this->response = 'Choose another letter from the list below...';
                 $this->blanksShow = implode(" ", $this->checkWord());
                 $this->used_header = 'Here are the letters you have tried so far: ';
                 $this->usedList = implode(" ", $this->usedLetters);
+
+                $this->pt1 = 'Wanna start a new game? Click here! >>> ';
+                $this->link = "LET'S DO THIS";
+                $this->pt2 = ' <<<';
             }
             else {
                 $this->greeting = 'The letter you chose was not found. Try again!';
-                $this->linksList = $this->alphabetList();
+                $this->linksList = implode(" ", $this->destroyLink());
                 $this->response = 'Choose a letter from the list below...';
                 $this->blanksShow = implode(" ", $this->checkWord());
                 $this->used_header = 'Here are the letters you have tried so far: ';
                 $this->usedLetters[] = $hold;
                 $this->usedList = implode(" ", $this->usedLetters);
                 $this->wrongAttempts += 1;
+
+                $this->pt1 = 'Wanna start a new game? Click here! >>> ';
+                $this->link = "LET'S DO THIS";
+                $this->pt2 = ' <<<';
+
                 if(strcasecmp(implode("", $this->checkWord()), $this->word) !== 0 && $this->wrongAttempts === 6){
                     $this->greeting = 'You lost the game!';
                     $this->response = "The hidden word was: $this->word";
@@ -125,13 +144,13 @@ class Hangman{
         }
     }
 
-    //fxn to display alphabet links
+    //fxn to create alphabet links
     function alphabetList(){
         for ($i = 65; $i <= 90; $i++) {
-            $letterLinks[] = '<a href="/phpwebsite/index.php?module=hangman&letter='.chr($i).'" class="myclass">'.chr($i).'</a>';
+            $this->letterLinks[] = '<a href="/phpwebsite/index.php?module=hangman&letter='.chr($i).'" class="myclass">'.chr($i).'</a>';
         }
-        $_SESSION['letter'] = $letterLinks;
-        return implode(" ",$letterLinks);
+        $_SESSION['letter'] = $this->letterLinks;
+        return $this->letterLinks;
     }
 
     //fxn for display of INITIAL placeholder
@@ -159,6 +178,15 @@ class Hangman{
         }
 
         return $this->place_holder;
+    }
+
+    //deleting links as they're chosen and recreate alphabet links list
+    function destroyLink(){
+            $hold = $_REQUEST['letter'];
+            $key = array_search($hold, $this->letterLinks);
+            unset($this->letterLinks[$key]);
+        $_SESSION['letter'] = $this->letterLinks;
+        return $this->letterLinks;
     }
 
     //function to return placeholder

@@ -9,6 +9,7 @@ if(isset($_GET['LINK'])){
     unset($_REQUEST['letter']);
     $game->makeGame();
     $game->initial();
+    unset($_GET['LINK']);
 }
 else {
     $game = makeGame();
@@ -35,12 +36,15 @@ function makeGame(){
         $usedLetters = $_SESSION['usedLetters'];
         $_SESSION['places'] = [];
         $place_holder = $_SESSION['places'];
+        $_SESSION['letter'] = [];
+        $letterLinks = $_SESSION['letter'];
     }
     else if(isset($_SESSION['word'])){
         $word = $_SESSION['word'];
         $wrongAttempts = $_SESSION['wrongAttempts'];
         $usedLetters = $_SESSION['usedLetters'];
         $place_holder = $_SESSION['places'];
+        $letterLinks = $_SESSION['letter'];
     }
     else{
         $word = chooseWord();
@@ -51,8 +55,10 @@ function makeGame(){
         $usedLetters = $_SESSION['usedLetters'];
         $_SESSION['places'] = [];
         $place_holder = $_SESSION['places'];
+        $_SESSION['letter'] = [];
+        $letterLinks = $_SESSION['letter'];
     }
-    return new Hangman($word, $wrongAttempts, $usedLetters, $place_holder);
+    return new Hangman($word, $wrongAttempts, $usedLetters, $place_holder, $letterLinks);
 
 }
 
