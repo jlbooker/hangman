@@ -147,7 +147,7 @@ class Hangman{
     //fxn to create alphabet links
     function alphabetList(){
         for ($i = 65; $i <= 90; $i++) {
-            $this->letterLinks[] = '<a href="/phpwebsite/index.php?module=hangman&letter='.chr($i).'" class="myclass">'.chr($i).'</a>';
+            $this->letterLinks[] = '<a href="/phpwebsite/index.php?module=hangman&letter='.chr($i).'">'.chr($i).'</a>';
         }
         $_SESSION['letter'] = $this->letterLinks;
         return $this->letterLinks;
@@ -182,9 +182,9 @@ class Hangman{
 
     //deleting links as they're chosen and recreate alphabet links list
     function destroyLink(){
-            $hold = $_REQUEST['letter'];
-            $key = array_search($hold, $this->letterLinks);
-            unset($this->letterLinks[$key]);
+        $key = array_search('<a href="/phpwebsite/index.php?module=hangman&letter='.$_REQUEST['letter'].'">'.$_REQUEST['letter'].'</a>',
+        $this->letterLinks);
+        $this->letterLinks[$key] = null;
         $_SESSION['letter'] = $this->letterLinks;
         return $this->letterLinks;
     }
