@@ -4,6 +4,8 @@ spl_autoload_register(function ($class_name) {
     include $class_name . '.php';
 });
 
+Layout::addPageTitle("Hangman");
+
 //decide how to make/start the game
 if(isset($_GET['LINK'])){
     unset($_REQUEST['letter']);
